@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="SHORTCUT ICON" href="./favicon.ico">
+  <title>CSDN-关于xx的xxx</title>
+  <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <style>
+    .iframe_item {
+      width: 100%;
+      height: 500px;
+      position: relative;
+      display: inline-block;
+      margin-top: 10px;
+      border: 1px solid #d2d2d2;
+    }
+
+    iframe {
+      border: none;
+      display: block;
+      width: 100%;
+      height: 100%
+    }
+
+    .url_input {
+      width: 80%;
+      margin-top: 10px;
+      margin-right: 10px
+    }
+
+    .change_button {
+      width: 20px;
+      height: 20px;
+      background-color: gray;
+      position: absolute;
+      right: -1px;
+      bottom: -1px;
+    }
+
+    .change_button:hover {
+      cursor: move;
+    }
+
+    .shade {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      left: 0;
+      top: 0;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <input onclick="hide(this)" type="button" value="hide">
+  </div>
+  <label>
+    <input class="url_input" index="1" type="text"><input type="button" class="go" index="1" value="go">
+  </label>
+  <div class="iframe_item">
+    <iframe id="1">
+    </iframe>
+    <div class="shade"></div>
+    <div class="change_button"></div>
+  </div>
+
+  <label>
+    <input class="url_input" index="2" type="text"><input type="button" class="go" index="2" value="go">
+  </label>
+  <div class="iframe_item">
+    <iframe id="2">
+    </iframe>
+    <div class="shade"></div>
+    <div class="change_button"></div>
+  </div>
+
+  <label>
+    <input class="url_input" index="3" type="text"><input type="button" class="go" index="3" value="go">
+  </label>
+  <div class="iframe_item">
+    <iframe id="3">
+    </iframe>
+    <div class="shade"></div>
+    <div class="change_button"></div>
+  </div>
+
+  <script>
+    function hide(e) {
+      $("label").toggle();
+      if ($("label").is(":visible"))
+        $(e).val("hide");
+      else
+        $(e).val("show");
+    }
+
+    $(".go").on("click", function () {
+      let index = $(this).attr("index");
+      let input = $(this).prev(".url_input");
+      let iframe = $("#" + index);
+      iframe.attr("src", input.val());
+    })
+
+    $(".url_input").on("keypress", function (e) {
+      if (e.keyCode === 13) {
+        let index = $(this).attr("index");
+        let url = $(this).val();
+        let iframe = $("#" + index);
+        iframe.attr("src", url);
+      }
+    })
+
+    $(".change_button").on("mousedown", function () {
+      let item = $(this).parents(".iframe_item")[0];
+      let oldX = window.event.clientX;
+      let oldY = window.event.clientY;
+      let oldWidth = item.offsetWidth;
+      let oldHeight = item.offsetHeight;
+      $(".shade").show();
+      $("body").on("mousemove", () => {
+        let newX = window.event.clientX;
+        let newY = window.event.clientY;
+        item.style.width = (oldWidth + (newX - oldX)) + "px";
+        item.style.height = (oldHeight + (newY - oldY)) + "px";
+      })
+    })
+
+    $("body").on("mouseup", function () {
+      $("body").off("mousemove");
+      $(".shade").hide();
+    })
+
+  </script>
+</body>
+
+</html>
